@@ -9,13 +9,22 @@
   ccache,
   libxml2,
   sqlite,
-  pkg-config
+  pkg-config,
+  fetchFromGitHub
 }:
 
 with pkgs; stdenv.mkDerivation {
   pname = "pnix-dev";
   version = "latest";
-  src = ./..;
+  
+  src = fetchFromGitHub {
+    owner = "php";
+    repo = "php-src";
+    rev = "php-8.4.6";
+    sha256 = "5GsK95kHhgtbPedP3se5DzYkCoUd0KAnVVSL+iOnwxM=";
+  };
+
+
   vendorSha256 = null;
   doCheck = false;
   enableParallelBuilding = true;
@@ -31,7 +40,7 @@ with pkgs; stdenv.mkDerivation {
   sqlite
   pkg-config ];
   prePatch = ''
-    ./buildconf
+    ./buildconf --force
     ./configure --enable-debug
   '';
   buildPhase = ''
